@@ -52,8 +52,8 @@ AICAN/
   "description": "Control ZLG CAN devices with natural language via MCP + Skill",
   "version": "0.1.0",
   "author": { "name": "Cedric Gao" },
-  "homepage": "https://github.com/<owner>/aican",
-  "repository": "https://github.com/<owner>/aican",
+  "homepage": "https://github.com/gaoguobin/aican",
+  "repository": "https://github.com/gaoguobin/aican",
   "license": "MIT",
   "keywords": ["can-bus", "zlg", "automotive", "mcp", "skill"]
 }
@@ -122,8 +122,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/<owner>/aican"
-Repository = "https://github.com/<owner>/aican"
+Homepage = "https://github.com/gaoguobin/aican"
+Repository = "https://github.com/gaoguobin/aican"
 
 [project.scripts]
 aican = "aican.server:main"
@@ -161,7 +161,7 @@ description: 操作周立功CAN卡（USBCAN/USBCANFD）。当用户提到CAN卡�
 ## 发布路径
 
 1. **GitHub 自建 Marketplace**（首发）
-   - 用户：`/plugin marketplace add <owner>/aican`
+   - 用户：`/plugin marketplace add gaoguobin/aican`
    - 用户：`/plugin install aican@aican-marketplace`
 
 2. **Anthropic 官方 Marketplace**（同步提交）

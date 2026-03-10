@@ -23,7 +23,7 @@
 ### 1. 克隆仓库并安装
 
 ```bash
-git clone https://github.com/<owner>/aican.git
+git clone https://github.com/gaoguobin/aican.git
 cd aican
 pip install -e .
 ```
@@ -54,7 +54,7 @@ claude --plugin-dir /path/to/aican
 或通过插件市场安装（便于后续更新）：
 
 ```
-/plugin marketplace add <owner>/aican
+/plugin marketplace add gaoguobin/aican
 /plugin install aican@aican-marketplace
 ```
 

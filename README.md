@@ -24,7 +24,7 @@ send/receive CAN frames, and decode DBC signals — all through Claude Code.
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/<owner>/aican.git
+git clone https://github.com/gaoguobin/aican.git
 cd aican
 pip install -e .
 ```
@@ -38,7 +38,7 @@ claude --plugin-dir /path/to/aican
 Or add the marketplace for easier updates:
 
 ```
-/plugin marketplace add <owner>/aican
+/plugin marketplace add gaoguobin/aican
 /plugin install aican@aican-marketplace
 ```
 

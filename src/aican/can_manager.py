@@ -40,7 +40,7 @@ def _find_zlgcan_dir() -> Path:
         "ZLG CAN SDK not found. Either:\n"
         "  1. Set ZLGCAN_SDK_PATH environment variable\n"
         "  2. Ensure 'zlgcan/' directory exists in the project root\n"
-        "See: https://github.com/<owner>/aican#installation"
+        "See: https://github.com/gaoguobin/aican#installation"
     )
 
 

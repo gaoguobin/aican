@@ -70,7 +70,7 @@ def _find_zlgcan_dir() -> Path:
         "ZLG CAN SDK not found. Either:\n"
         "  1. Set ZLGCAN_SDK_PATH environment variable\n"
         "  2. Ensure 'zlgcan/' directory exists in the project root\n"
-        "See: https://github.com/<owner>/aican#installation"
+        "See: https://github.com/gaoguobin/aican#installation"
     )
 
 
@@ -129,8 +129,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/<owner>/aican"
-Repository = "https://github.com/<owner>/aican"
+Homepage = "https://github.com/gaoguobin/aican"
+Repository = "https://github.com/gaoguobin/aican"
 
 [project.scripts]
 aican = "aican.server:main"
@@ -187,8 +187,8 @@ rm "D:/OneDrive/ClaudeCode/AICAN/=39.0.0"
   "description": "Control ZLG CAN devices with natural language via MCP + Skill",
   "version": "0.1.0",
   "author": { "name": "Cedric Gao" },
-  "homepage": "https://github.com/<owner>/aican",
-  "repository": "https://github.com/<owner>/aican",
+  "homepage": "https://github.com/gaoguobin/aican",
+  "repository": "https://github.com/gaoguobin/aican",
   "license": "MIT",
   "keywords": ["can-bus", "zlg", "automotive", "mcp", "skill"]
 }
@@ -391,7 +391,7 @@ send/receive CAN frames, and decode DBC signals — all through Claude Code.
 ### 1. Clone and install
 
 ​```bash
-git clone https://github.com/<owner>/aican.git
+git clone https://github.com/gaoguobin/aican.git
 cd aican
 pip install -e .
 ​```
@@ -405,7 +405,7 @@ claude --plugin-dir /path/to/aican
 Or add the marketplace for easier updates:
 
 ​```
-/plugin marketplace add <owner>/aican
+/plugin marketplace add gaoguobin/aican
 /plugin install aican@aican-marketplace
 ​```
 
@@ -512,4 +512,4 @@ After Tasks 1-14 are complete:
 
 1. Create GitHub repo and push
 2. Submit to Anthropic Marketplace: claude.ai/settings/plugins/submit
-3. Replace all `<owner>` placeholders with actual GitHub username
+3. Replace all `gaoguobin` placeholders with actual GitHub username
