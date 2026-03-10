@@ -1,0 +1,11 @@
+{
+  "name": "aican-marketplace",
+  "owner": { "name": "Cedric Gao" },
+  "plugins": [
+    {
+      "name": "aican",
+      "source": ".",
+      "description": "Control ZLG CAN devices with natural language via MCP + Skill"
+    }
+  ]
+}

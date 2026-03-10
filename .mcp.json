@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "aican": {
+      "command": "python",
+      "args": ["-m", "aican"]
+    }
+  }
+}

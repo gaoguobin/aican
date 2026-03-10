@@ -1,0 +1,10 @@
+{
+  "name": "aican",
+  "description": "Control ZLG CAN devices with natural language via MCP + Skill",
+  "version": "0.1.0",
+  "author": { "name": "Cedric Gao" },
+  "homepage": "https://github.com/<owner>/aican",
+  "repository": "https://github.com/<owner>/aican",
+  "license": "MIT",
+  "keywords": ["can-bus", "zlg", "automotive", "mcp", "skill"]
+}
