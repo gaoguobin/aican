@@ -33,12 +33,29 @@ auto_setup("{device_type}", channel={channel}, baudrate={baudrate}, dbc_path="{d
 
 | 场景 | 调用 |
 |------|------|
-| 读DBC信号值 | `read_signal("信号名关键词", "{device_type}", channel={channel})` |
+| 读DBC信号值 | 见下方「读信号流程」 |
 | 发送请求并接收应答 | `send_and_receive(..., can_id=0x100, data=[...], response_ids=[0x200])` |
 | 接收CAN报文 | `clear_buffer(...)` → `receive(...)` |
 | 发送CAN报文（仅发送） | `send_can(..., can_id=0x100, data=[0x01, 0x02])` |
 | 搜索信号 | `search_signal("关键词")` |
 | 关闭设备 | `close_device("{device_type}")` |
+
+## 读信号流程
+
+根据用户措辞选择不同方式：
+
+- 用户说「读取XX」「查看XX」→ 周期广播信号，直接读：
+  ```
+  read_signal("信号名", "{device_type}", channel={channel})
+  ```
+
+- 用户说「请求XX」「发送请求读XX」→ 请求应答信号：
+  1. 先用 `search_signal` 在 DBC 中搜索对应的请求帧
+  2. 找到 → 用 DBC 中的定义构造请求
+  3. 找不到 → 问用户请求帧格式（CAN ID + 数据）
+  ```
+  send_and_receive("{device_type}", can_id=请求ID, data=[请求数据], response_ids=[应答ID])
+  ```
 
 ## 避坑要点
 
