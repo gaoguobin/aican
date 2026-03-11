@@ -92,10 +92,6 @@ set ZLGCAN_SDK_PATH=C:\path\to\zlgcan
 
 If AICAN saves you time, consider [sponsoring the author](https://gaoguobin.github.io/sponsor) to help cover API token costs.
 
-Thanks:
-
-![Sponsor List](https://gaoguobin.github.io/sponsor/list.png)
-
 ## License
 
 MIT — see [LICENSE](LICENSE)

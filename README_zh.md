@@ -128,10 +128,6 @@ set ZLGCAN_SDK_PATH=C:\path\to\zlgcan
 
 如果 AICAN 帮你节省了时间，欢迎[赞助作者](https://gaoguobin.github.io/sponsor)，资助 API token 消耗。
 
-感谢：
-
-![赞助者列表](https://gaoguobin.github.io/sponsor/list.png)
-
 ## 许可证
 
 MIT — 详见 [LICENSE](LICENSE)
