@@ -6,8 +6,9 @@
 
 ## 功能特性
 
-- **17 个 MCP 工具**：设备管理、通道配置、CAN/CANFD 收发、DBC 信号解析
+- **18 个 MCP 工具**：设备管理、通道配置、CAN/CANFD 收发、DBC 信号解析
 - **auto_setup 一键初始化**：一次调用完成 打开设备→初始化通道→加载DBC，幂等操作
+- **send_and_receive 请求-应答**：一次调用发送请求帧并捕获应答（后台收帧线程处理 µs 级回复）
 - **Skill 引导工作流**：交互式初始化、最佳实践提示、常见错误预警
 - **中文信号搜索**：用中文关键词搜索 DBC 信号（如"母线电压" → BusVolt）
 - **支持机型**：USBCANFD-200U/100U/MINI/400U/800U、USBCAN-2E-U/4E-U/8E-U、USBCAN-I/II
@@ -51,8 +52,8 @@ Skill 会自动引导 Claude 完成：设备初始化 → 信号读取。
 
 ```
 发送CAN报文 ID=0x100 数据=[0x01, 0x02]
+读取ECU的ChipID
 搜索DBC里和电机转速相关的信号
-用500kbps初始化通道0
 读一下当前的母线电流和电压
 ```
 
@@ -68,7 +69,7 @@ Skill 会自动引导 Claude 完成：设备初始化 → 信号读取。
 
 | 类别 | 工具 |
 |------|------|
-| 一键初始化 | auto_setup |
+| 复合操作 | auto_setup、send_and_receive |
 | 设备管理 | list_supported_devices、list_open_devices、open_device、close_device |
 | 通道配置 | init_channel、reset_channel |
 | 发送 | send_can、send_canfd |

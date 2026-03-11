@@ -764,6 +764,130 @@ class CANManager:
 
         return {"status": "ok", "steps": steps}
 
+    def send_and_receive(
+        self,
+        device_type: int | str,
+        can_id: int,
+        data: list[int],
+        channel: int = 0,
+        device_index: int = 0,
+        is_extended: bool = False,
+        response_ids: list[int] | None = None,
+        wait_ms: int = 1000,
+        max_count: int = 10,
+    ) -> dict:
+        """发送CAN帧并接收应答。
+
+        后台线程持续收帧（仅保留 response_ids 匹配帧）→ 发送 → 等待 → 返回。
+        解决 us 级快速应答被漏掉的问题。
+        """
+        dev = self._get_device(device_type, device_index)
+        ch = dev.channels.get(channel)
+        if not ch or not ch.started:
+            raise CANError("send_and_receive", f"通道 {channel} 未启动")
+
+        filter_set = set(response_ids) if response_ids else None
+        collected: list[dict] = []
+        lock = threading.Lock()
+        stop_flag = threading.Event()
+        recv_error: list[str] = []
+
+        def _parse_can(msgs, ret):
+            for i in range(ret):
+                msg = msgs[i]
+                frame = msg.frame
+                fid = frame.can_id & 0x1FFFFFFF
+                if filter_set and fid not in filter_set:
+                    continue
+                with lock:
+                    if len(collected) >= max_count:
+                        stop_flag.set()
+                        return
+                    collected.append({
+                        "id": hex(fid),
+                        "id_int": fid,
+                        "dlc": frame.can_dlc,
+                        "data": [f"{b:02X}" for b in frame.data[:frame.can_dlc]],
+                        "data_hex": " ".join(f"{b:02X}" for b in frame.data[:frame.can_dlc]),
+                        "is_extended": bool(frame.can_id & (1 << 31)),
+                        "is_remote": bool(frame.can_id & (1 << 30)),
+                        "timestamp": msg.timestamp,
+                    })
+                    if len(collected) >= max_count:
+                        stop_flag.set()
+                        return
+
+        def _parse_canfd(msgs, ret):
+            for i in range(ret):
+                msg = msgs[i]
+                frame = msg.frame
+                fid = frame.can_id & 0x1FFFFFFF
+                if filter_set and fid not in filter_set:
+                    continue
+                with lock:
+                    if len(collected) >= max_count:
+                        stop_flag.set()
+                        return
+                    collected.append({
+                        "id": hex(fid),
+                        "id_int": fid,
+                        "len": frame.len,
+                        "data": [f"{b:02X}" for b in frame.data[:frame.len]],
+                        "data_hex": " ".join(f"{b:02X}" for b in frame.data[:frame.len]),
+                        "is_extended": bool(frame.can_id & (1 << 31)),
+                        "brs": bool(frame.flags & 0x01),
+                        "timestamp": msg.timestamp,
+                    })
+                    if len(collected) >= max_count:
+                        stop_flag.set()
+                        return
+
+        def _recv_loop():
+            try:
+                while not stop_flag.is_set():
+                    msgs, ret = self._zcan.Receive(ch.channel_handle, 100, 50)
+                    _parse_can(msgs, ret)
+                    if ch.is_canfd and not stop_flag.is_set():
+                        fd_msgs, fd_ret = self._zcan.ReceiveFD(ch.channel_handle, 100, 50)
+                        _parse_canfd(fd_msgs, fd_ret)
+            except Exception as e:
+                recv_error.append(str(e))
+                stop_flag.set()
+
+        # 1. 清缓冲 + 启收帧线程
+        self._zcan.ClearBuffer(ch.channel_handle)
+        t = threading.Thread(target=_recv_loop, daemon=True)
+        t.start()
+
+        # 2. 发送
+        send_result = self.send_can(
+            device_type, device_index, channel,
+            can_id, data, is_extended,
+        )
+
+        # 3. 发送失败则提前退出
+        if send_result.get("sent", 0) == 0:
+            stop_flag.set()
+            t.join(timeout=0.1)
+            raise CANError("send_and_receive", f"发送失败: CAN ID={hex(can_id)}")
+
+        # 4. 等待收齐或超时
+        t.join(timeout=wait_ms / 1000.0)
+        stop_flag.set()
+        t.join(timeout=0.1)
+
+        if recv_error:
+            raise CANError("send_and_receive", f"接收线程异常: {recv_error[0]}")
+
+        with lock:
+            result_frames = list(collected)
+
+        return {
+            "status": "ok",
+            "sent": send_result,
+            "received": {"can_frames": result_frames, "total": len(result_frames)},
+        }
+
     # ── DBC 信号操作 ──
 
     def load_dbc(self, dbc_path: str) -> dict:

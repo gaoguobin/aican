@@ -102,6 +102,51 @@ def auto_setup(
         return f"错误: {e}"
 
 
+@mcp.tool()
+def send_and_receive(
+    device_type: str,
+    can_id: int,
+    data: list[int],
+    channel: int = 0,
+    device_index: int = 0,
+    is_extended: bool = False,
+    response_ids: list[int] | None = None,
+    wait_ms: int = 1000,
+    max_count: int = 10,
+) -> str:
+    """发送CAN帧并接收应答。自动完成：清缓冲→发送→接收。
+
+    典型用法：发送读命令帧，等待设备回复。
+
+    Args:
+        device_type: 设备类型名称或ID
+        can_id: 发送帧的CAN ID
+        data: 发送数据字节列表，最多8字节
+        channel: 通道号，默认0
+        device_index: 设备索引号，默认0
+        is_extended: 是否为扩展帧(29位ID)，默认标准帧
+        response_ids: 期望的应答帧CAN ID列表（过滤用）。为空则返回所有收到的帧
+        wait_ms: 等待应答超时(毫秒)，默认1000
+        max_count: 最大接收帧数，默认10
+    """
+    mgr = get_manager()
+    try:
+        result = mgr.send_and_receive(
+            device_type=device_type,
+            can_id=can_id,
+            data=data,
+            channel=channel,
+            device_index=device_index,
+            is_extended=is_extended,
+            response_ids=response_ids,
+            wait_ms=wait_ms,
+            max_count=max_count,
+        )
+        return json.dumps(result, ensure_ascii=False, indent=2)
+    except CANError as e:
+        return f"错误: {e}"
+
+
 # ════════════════════════════════════════
 #  通道工具
 # ════════════════════════════════════════

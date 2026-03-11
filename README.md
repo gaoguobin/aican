@@ -7,8 +7,9 @@ send/receive CAN frames, and decode DBC signals — all through Claude Code.
 
 ## Features
 
-- 17 MCP tools: device management, channel config, CAN/CANFD send/receive, DBC signal decoding
+- 18 MCP tools: device management, channel config, CAN/CANFD send/receive, DBC signal decoding
 - **auto_setup**: one-call device initialization (open → init → load DBC), idempotent
+- **send_and_receive**: send a request frame and capture the response in one call (background receive thread handles µs-level replies)
 - Skill-guided workflow: interactive setup, best-practice prompts, common pitfall warnings
 - Chinese signal search: search DBC signals by Chinese terms (e.g. "母线电压" → BusVolt)
 - Supports: USBCANFD-200U/100U/MINI/400U/800U, USBCAN-2E-U/4E-U/8E-U, USBCAN-I/II
@@ -50,8 +51,8 @@ The Skill automatically guides Claude through: device setup → signal reading.
 
 More examples:
 - "发送CAN报文 ID=0x100 数据=[0x01, 0x02]"
+- "读取ECU的ChipID"
 - "搜索DBC里和电机转速相关的信号"
-- "用500kbps初始化通道0"
 
 ## Supported Devices
 
@@ -65,7 +66,7 @@ More examples:
 
 | Category | Tools |
 |----------|-------|
-| Setup | auto_setup |
+| Setup | auto_setup, send_and_receive |
 | Device | list_supported_devices, list_open_devices, open_device, close_device |
 | Channel | init_channel, reset_channel |
 | Send | send_can, send_canfd |

@@ -34,8 +34,9 @@ auto_setup("{device_type}", channel={channel}, baudrate={baudrate}, dbc_path="{d
 | 场景 | 调用 |
 |------|------|
 | 读DBC信号值 | `read_signal("信号名关键词", "{device_type}", channel={channel})` |
+| 发送请求并接收应答 | `send_and_receive(..., can_id=0x100, data=[...], response_ids=[0x200])` |
 | 接收CAN报文 | `clear_buffer(...)` → `receive(...)` |
-| 发送CAN报文 | `send_can(..., can_id=0x100, data=[0x01, 0x02])` |
+| 发送CAN报文（仅发送） | `send_can(..., can_id=0x100, data=[0x01, 0x02])` |
 | 搜索信号 | `search_signal("关键词")` |
 | 关闭设备 | `close_device("{device_type}")` |
 
