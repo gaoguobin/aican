@@ -9,6 +9,7 @@ venv/
 
 # User-specific
 DBC/
+docs/
 skills/can-card/user-config.json
 .claude/
 
