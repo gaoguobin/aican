@@ -84,7 +84,7 @@ Skill 会自动引导 Claude 完成：设备初始化 → 信号读取。
 3. 通道编号（如 0）
 4. DBC 文件路径（可选）
 
-配置保存在 `skills/can-card/user-config.json`。如需重新配置，删除该文件后重新加载 Skill 即可。
+配置保存在项目根目录的 `.claude/aican.local.md`（按项目存储，不提交 git）。如需重新配置，编辑或删除该文件即可。
 
 ## DBC 信号搜索示例
 

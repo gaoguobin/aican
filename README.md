@@ -75,9 +75,10 @@ More examples:
 ## Configuration
 
 On first use, the Skill asks for your device type, baudrate, channel, and
-optional DBC file path. Settings are saved to `skills/can-card/user-config.json`.
+optional DBC file path. Settings are saved to `.claude/aican.local.md` in
+your project root (per-project, not committed to git).
 
-To reconfigure, delete the config file and reload the Skill.
+To reconfigure, edit or delete `.claude/aican.local.md`.
 
 ## Advanced: Environment Variable
 
