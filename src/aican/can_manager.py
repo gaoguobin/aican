@@ -215,6 +215,7 @@ class CANManager:
         self._receive_threads: dict[str, threading.Thread] = {}
         self._receive_flags: dict[str, bool] = {}
         self._dbc: cantools.Database | None = None
+        self._dbc_path: str | None = None
 
     @staticmethod
     def _device_key(device_type: int, device_index: int) -> str:
@@ -718,11 +719,57 @@ class CANManager:
         return [{"name": k, "type_id": v, "series": self.get_series(v).value}
                 for k, v in DEVICE_NAME_MAP.items()]
 
+    # ── 复合操作 ──
+
+    def auto_setup(
+        self,
+        device_type: int | str,
+        device_index: int = 0,
+        channel: int = 0,
+        baudrate: int = 500000,
+        dbc_path: str | None = None,
+    ) -> dict:
+        """一键初始化：打开设备→初始化通道→加载DBC（幂等，已完成的步骤自动跳过）"""
+        steps = {}
+
+        # 1. 打开设备
+        if isinstance(device_type, str):
+            type_id = self.resolve_device_type(device_type)
+        else:
+            type_id = device_type
+        key = self._device_key(type_id, device_index)
+        if key in self._devices:
+            steps["open_device"] = "skipped"
+        else:
+            self.open_device(device_type, device_index)
+            steps["open_device"] = "done"
+
+        # 2. 初始化通道
+        dev = self._devices[key]
+        if channel in dev.channels and dev.channels[channel].started:
+            steps["init_channel"] = "skipped"
+        else:
+            self.init_channel(device_type, device_index, channel, baudrate)
+            steps["init_channel"] = "done"
+
+        # 3. 加载DBC
+        if dbc_path:
+            if self._dbc is not None and self._dbc_path == dbc_path:
+                steps["load_dbc"] = "skipped"
+            else:
+                self.load_dbc(dbc_path)
+                steps["load_dbc"] = "done"
+        else:
+            steps["load_dbc"] = "no_path"
+
+        return {"status": "ok", "steps": steps}
+
     # ── DBC 信号操作 ──
 
     def load_dbc(self, dbc_path: str) -> dict:
         """加载DBC文件"""
         self._dbc = cantools.database.load_file(dbc_path, strict=False, encoding='gbk')
+        self._dbc_path = dbc_path
         return {
             "status": "ok",
             "messages": len(self._dbc.messages),

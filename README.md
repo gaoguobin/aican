@@ -7,7 +7,8 @@ send/receive CAN frames, and decode DBC signals — all through Claude Code.
 
 ## Features
 
-- 16 MCP tools: device management, channel config, CAN/CANFD send/receive, DBC signal decoding
+- 17 MCP tools: device management, channel config, CAN/CANFD send/receive, DBC signal decoding
+- **auto_setup**: one-call device initialization (open → init → load DBC), idempotent
 - Skill-guided workflow: interactive setup, best-practice prompts, common pitfall warnings
 - Chinese signal search: search DBC signals by Chinese terms (e.g. "母线电压" → BusVolt)
 - Supports: USBCANFD-200U/100U/MINI/400U/800U, USBCAN-2E-U/4E-U/8E-U, USBCAN-I/II
@@ -21,25 +22,22 @@ send/receive CAN frames, and decode DBC signals — all through Claude Code.
 
 ## Installation
 
-### 1. Clone and install
-
-```bash
-git clone https://github.com/gaoguobin/aican.git
-cd aican
-pip install -e .
-```
-
-### 2. Load as Claude Code plugin
-
-```bash
-claude --plugin-dir /path/to/aican
-```
-
-Or add the marketplace for easier updates:
+### Via Plugin Marketplace (Recommended)
 
 ```
 /plugin marketplace add gaoguobin/aican
 /plugin install aican@aican-marketplace
+```
+
+After installation, restart Claude Code or run `/mcp` to verify the MCP server status.
+
+> Dependencies (`mcp`, `cantools`) are auto-installed on first launch.
+
+### Via local directory
+
+```bash
+git clone https://github.com/gaoguobin/aican.git
+claude --plugin-dir /path/to/aican
 ```
 
 ## Quick Start
@@ -48,7 +46,7 @@ After installation, open Claude Code and try:
 
 > "打开CAN卡，读取母线电压"
 
-The Skill automatically guides Claude through: device selection → channel init → signal reading.
+The Skill automatically guides Claude through: device setup → signal reading.
 
 More examples:
 - "发送CAN报文 ID=0x100 数据=[0x01, 0x02]"
@@ -67,6 +65,7 @@ More examples:
 
 | Category | Tools |
 |----------|-------|
+| Setup | auto_setup |
 | Device | list_supported_devices, list_open_devices, open_device, close_device |
 | Channel | init_channel, reset_channel |
 | Send | send_can, send_canfd |

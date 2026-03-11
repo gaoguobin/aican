@@ -67,6 +67,42 @@ def close_device(device_type: str, device_index: int = 0) -> str:
 
 
 # ════════════════════════════════════════
+#  复合工具
+# ════════════════════════════════════════
+
+@mcp.tool()
+def auto_setup(
+    device_type: str,
+    channel: int = 0,
+    baudrate: int = 500000,
+    dbc_path: str = "",
+    device_index: int = 0,
+) -> str:
+    """一键初始化CAN设备：自动完成 打开设备→初始化通道→加载DBC。
+    幂等操作，已完成的步骤自动跳过。推荐作为所有操作的第一步调用。
+
+    Args:
+        device_type: 设备类型名称或ID。例如 "USBCAN-2E-U"
+        channel: 通道号，默认0
+        baudrate: 波特率，默认500000
+        dbc_path: DBC文件路径（可选，为空则跳过DBC加载）
+        device_index: 设备索引号，默认0
+    """
+    mgr = get_manager()
+    try:
+        result = mgr.auto_setup(
+            device_type=device_type,
+            device_index=device_index,
+            channel=channel,
+            baudrate=baudrate,
+            dbc_path=dbc_path or None,
+        )
+        return json.dumps(result, ensure_ascii=False, indent=2)
+    except CANError as e:
+        return f"错误: {e}"
+
+
+# ════════════════════════════════════════
 #  通道工具
 # ════════════════════════════════════════
 
