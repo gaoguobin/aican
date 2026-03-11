@@ -4,7 +4,7 @@
   "plugins": [
     {
       "name": "aican",
-      "source": ".",
+      "source": "./",
       "description": "Control ZLG CAN devices with natural language via MCP + Skill"
     }
   ]
