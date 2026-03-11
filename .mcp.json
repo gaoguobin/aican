@@ -2,7 +2,11 @@
   "mcpServers": {
     "aican": {
       "command": "python",
-      "args": ["-m", "aican"]
+      "args": ["-m", "aican"],
+      "env": {
+        "PYTHONPATH": "${CLAUDE_PLUGIN_ROOT}/src",
+        "ZLGCAN_SDK_PATH": "${CLAUDE_PLUGIN_ROOT}/zlgcan"
+      }
     }
   }
 }
