@@ -29,7 +29,7 @@ send/receive CAN frames, and decode DBC signals — all through Claude Code.
 /plugin install aican@aican-marketplace
 ```
 
-After installation, restart Claude Code or run `/mcp` to verify the MCP server status.
+After installation, run `/reload-plugins` (or restart Claude Code), then `/mcp` to verify the MCP server status.
 
 > Dependencies (`mcp`, `cantools`) are auto-installed on first launch.
 
@@ -87,6 +87,14 @@ If the ZLG SDK is installed elsewhere, set `ZLGCAN_SDK_PATH`:
 ```bash
 set ZLGCAN_SDK_PATH=C:\path\to\zlgcan
 ```
+
+## Sponsor
+
+If AICAN saves you time, consider [sponsoring the author](https://gaoguobin.github.io/sponsor) to help cover API token costs.
+
+Thanks:
+
+![Sponsor List](https://gaoguobin.github.io/sponsor/list.png)
 
 ## License
 
