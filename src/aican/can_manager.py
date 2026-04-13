@@ -62,10 +62,15 @@ import zlgcan
 
 class DeviceSeries(str, Enum):
     """设备系列，决定初始化流程"""
-    USBCANFD = "usbcanfd"       # USBCANFD-100U/200U/400U/800U/MINI
-    USBCAN_E_U = "usbcan_e_u"  # USBCAN-E-U/2E-U/4E-U/8E-U
-    USBCAN_I = "usbcan_i"      # USBCAN-I/II (老设备)
-    PCIE_CANFD = "pcie_canfd"   # PCIE-CANFD系列
+    USBCANFD = "usbcanfd"        # USBCANFD全系列
+    USBCAN_E_U = "usbcan_e_u"   # USBCAN-E-U/2E-U/4E-U/8E-U
+    USBCAN_I = "usbcan_i"       # USBCAN-I/II (老设备)
+    PCIE_CANFD = "pcie_canfd"    # PCIE-CANFD全系列
+    CANET = "canet"             # CANET-TCP/UDP (网口CAN)
+    CANDTU = "candtu"           # CANDTU系列 (数据透传)
+    CANFDNET = "canfdnet"       # CANFDNET系列 (网口CANFD)
+    CANFDCOM = "canfdcom"       # CANFDCOM-100IE (网口)
+    VIRTUAL = "virtual"          # 虚拟设备
     OTHER = "other"
 
 
@@ -76,10 +81,15 @@ def _register_series(series: DeviceSeries, *type_values: int):
     for v in type_values:
         _DEVICE_SERIES_MAP[v] = series
 
-_register_series(DeviceSeries.USBCANFD, 41, 42, 43, 59, 76)  # 200U,100U,MINI,800U,400U
+_register_series(DeviceSeries.USBCANFD, 41, 42, 43, 59, 76, 77, 80, 85)  # 200U,100U,MINI,800U,400U,200U-2,CANFDBLUE-200U,800H
 _register_series(DeviceSeries.USBCAN_E_U, 20, 21, 31, 34)     # E-U,2E-U,4E-U,8E-U
-_register_series(DeviceSeries.USBCAN_I, 3, 4)                  # USBCAN1, USBCAN2
-_register_series(DeviceSeries.PCIE_CANFD, 38, 39, 40, 60, 61, 62, 63)
+_register_series(DeviceSeries.USBCAN_I, 3, 4)                   # USBCAN-I, USBCAN-II
+_register_series(DeviceSeries.PCIE_CANFD, 38, 39, 40, 60, 61, 62, 63, 82, 83, 84)  # 100U,200U,400U,100U-EX,400U-EX,200U-MINI,200U-EX,800U,1200U,MINI-PCIE
+_register_series(DeviceSeries.CANET, 12, 17)                     # CANET-UDP, CANET-TCP
+_register_series(DeviceSeries.CANDTU, 32, 33, 36, 37, 47, 64, 65, 68, 69, 70, 71, 72, 73, 74, 75)  # CANDTU全系列
+_register_series(DeviceSeries.CANFDNET, 48, 49, 52, 53, 55, 56, 57, 58)  # CANFDNET TCP/UDP各型号
+_register_series(DeviceSeries.CANFDCOM, 44)                      # CANFDCOM-100IE
+_register_series(DeviceSeries.VIRTUAL, 99)                       # 虚拟设备
 
 
 # CAN/汽车领域中英术语词典（中文关键词 → 英文子串列表）
@@ -148,23 +158,94 @@ _CN_TERM_PATTERN = re.compile("|".join(re.escape(t) for t in _CN_TERMS_SORTED))
 
 # 常用设备类型名称映射（自然语言 → 设备类型值）
 DEVICE_NAME_MAP: dict[str, int] = {
+    # ── USBCAN-I/II (老设备) ──
     "USBCAN-I": 3,
     "USBCAN-II": 4,
     "USBCAN1": 3,
     "USBCAN2": 4,
+    # ── USBCAN-E-U系列 ──
     "USBCAN-E-U": 20,
     "USBCAN-2E-U": 21,
     "USBCAN-4E-U": 31,
     "USBCAN-8E-U": 34,
+    # ── USBCANFD系列 ──
     "USBCANFD-100U": 42,
     "USBCANFD-200U": 41,
+    "USBCANFD-200U-2": 77,
     "USBCANFD-400U": 76,
     "USBCANFD-800U": 59,
+    "USBCANFD-800H": 85,
     "USBCANFD-MINI": 43,
+    "CANFDBLUE-200U": 54,
+    # ── PCIE-CANFD系列 ──
     "PCIE-CANFD-100U": 38,
     "PCIE-CANFD-200U": 39,
+    "PCIE-CANFD-200U-M2": 63,
+    "PCIE-CANFD-200U-MINI": 62,
+    "PCIE-CANFD-200U-EX": 62,
     "PCIE-CANFD-400U": 40,
+    "PCIE-CANFD-100U-EX": 60,
+    "PCIE-CANFD-400U-EX": 61,
+    "PCIE-CANFD-800U": 82,
+    "PCIE-CANFD-1200U": 83,
+    "MINI-PCIE-CANFD": 84,
+    # ── CANET网口系列 ──
+    "CANET-TCP": 17,
+    "CANET-UDP": 12,
+    # ── CANDTU数据透传系列 ──
+    "CANDTU-200UR": 32,
+    "CANDTU-MINI": 33,
+    "CANDTU-NET": 36,
+    "CANDTU-100UR": 37,
+    "CANDTU-NET-400": 47,
+    "CANDTU-400-TCP": 64,
+    "CANDTU-400-UDP": 65,
+    "CANDTU-200U": 77,
+    "CANDTU-800ER-TCP": 68,
+    "CANDTU-800ER-UDP": 69,
+    "CANDTU-800EWGR-TCP": 70,
+    "CANDTU-800EWGR-UDP": 71,
+    "CANDTU-600EWGR-TCP": 72,
+    "CANDTU-600EWGR-UDP": 73,
+    "CANDTU-CASCADE-TCP": 74,
+    "CANDTU-CASCADE-UDP": 75,
+    "CANFDDTU-400-TCP": 64,
+    "CANFDDTU-400-UDP": 65,
+    "CANFDDTU-200U": 77,
+    "CANFDDTU-300U": 81,
+    "CANFDDTU-800ER-TCP": 68,
+    "CANFDDTU-800ER-UDP": 69,
+    "CANFDDTU-800EWGR-TCP": 70,
+    "CANFDDTU-800EWGR-UDP": 71,
+    "CANFDDTU-600EWGR-TCP": 72,
+    "CANFDDTU-600EWGR-UDP": 73,
+    "CANFDDTU-CASCADE-TCP": 74,
+    "CANFDDTU-CASCADE-UDP": 75,
+    "CANDTU-300U": 81,
+    "CANFDBRIDGE-PLUS": 80,
+    # ── CANFDNET网口系列 ──
+    "CANFDNET-200U-TCP": 48,
+    "CANFDNET-200U-UDP": 49,
+    "CANFDNET-400U-TCP": 52,
+    "CANFDNET-400U-UDP": 53,
+    "CANFDNET-100U-TCP": 55,
+    "CANFDNET-100U-UDP": 56,
+    "CANFDNET-800U-TCP": 57,
+    "CANFDNET-800U-UDP": 58,
+    "CANFDNET-TCP": 48,
+    "CANFDNET-UDP": 49,
+    # ── CANFDCOM ──
+    "CANFDCOM-100IE": 44,
+    # ── WiFi-CAN系列 ──
+    "CANFDWIFI-100U-TCP": 50,
+    "CANFDWIFI-100U-UDP": 51,
+    "CANFDWIFI-200U-TCP": 66,
+    "CANFDWIFI-200U-UDP": 67,
+    # ── 虚拟设备 ──
     "VIRTUAL": 99,
+    # ── 旧型号(PCI) ──
+    "PCI-5010U": 19,
+    "PCI-5020U": 22,
 }
 
 
