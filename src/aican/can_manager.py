@@ -81,12 +81,12 @@ def _register_series(series: DeviceSeries, *type_values: int):
     for v in type_values:
         _DEVICE_SERIES_MAP[v] = series
 
-_register_series(DeviceSeries.USBCANFD, 41, 42, 43, 59, 76, 77, 80, 85)  # 200U,100U,MINI,800U,400U,200U-2,CANFDBLUE-200U,800H
+_register_series(DeviceSeries.USBCANFD, 41, 42, 43, 59, 76)  # 200U,100U,MINI,800U,400U
 _register_series(DeviceSeries.USBCAN_E_U, 20, 21, 31, 34)     # E-U,2E-U,4E-U,8E-U
 _register_series(DeviceSeries.USBCAN_I, 3, 4)                   # USBCAN-I, USBCAN-II
 _register_series(DeviceSeries.PCIE_CANFD, 38, 39, 40, 60, 61, 62, 63, 82, 83, 84)  # 100U,200U,400U,100U-EX,400U-EX,200U-MINI,200U-EX,800U,1200U,MINI-PCIE
 _register_series(DeviceSeries.CANET, 12, 17)                     # CANET-UDP, CANET-TCP
-_register_series(DeviceSeries.CANDTU, 32, 33, 36, 37, 47, 64, 65, 68, 69, 70, 71, 72, 73, 74, 75)  # CANDTU全系列
+_register_series(DeviceSeries.CANDTU, 32, 33, 36, 37, 47, 64, 65, 68, 69, 70, 71, 72, 73, 74, 75, 77, 80)  # CANDTU全系列 + CANFDDTU_200U(77) + CANFDBRIDGE_PLUS(80)
 _register_series(DeviceSeries.CANFDNET, 48, 49, 52, 53, 55, 56, 57, 58)  # CANFDNET TCP/UDP各型号
 _register_series(DeviceSeries.CANFDCOM, 44)                      # CANFDCOM-100IE
 _register_series(DeviceSeries.VIRTUAL, 99)                       # 虚拟设备
@@ -171,10 +171,8 @@ DEVICE_NAME_MAP: dict[str, int] = {
     # ── USBCANFD系列 ──
     "USBCANFD-100U": 42,
     "USBCANFD-200U": 41,
-    "USBCANFD-200U-2": 77,
     "USBCANFD-400U": 76,
     "USBCANFD-800U": 59,
-    "USBCANFD-800H": 85,
     "USBCANFD-MINI": 43,
     "CANFDBLUE-200U": 54,
     # ── PCIE-CANFD系列 ──
